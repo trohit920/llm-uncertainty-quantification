@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Environments
+.venv/
+venv/
+env/
+
+# Model / dataset caches (multi-GB, re-downloaded on demand)
+.hf_cache/
+.pip_cache/
+data/
+
+# Local scratch
+*.log
+scratch/

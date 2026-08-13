@@ -1,0 +1,506 @@
+{
+  "task": "gsm8k",
+  "num_examples": 100,
+  "num_dev": 50,
+  "num_test": 50,
+  "greedy_accuracy": 0.56,
+  "best_signal": "lexical_entropy",
+  "evaluations": [
+    {
+      "signal": "lexical_entropy",
+      "display_name": "Lexical entropy",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.8839285714285714,
+        "lower": 0.7804423309178744,
+        "upper": 0.9661331989976492
+      },
+      "aurc": {
+        "value": 0.17642151406639556,
+        "lower": 0.07996918797215026,
+        "upper": 0.31293358007620325
+      },
+      "ece_fixed_width": 0.1447225147873062,
+      "ece_equal_mass": 0.1554223050289581,
+      "brier": 0.15030788051008317,
+      "num_test": 50
+    },
+    {
+      "signal": "self_consistency",
+      "display_name": "Self-consistency",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.8839285714285714,
+        "lower": 0.7887743972835314,
+        "upper": 0.96475
+      },
+      "aurc": {
+        "value": 0.1720099482242771,
+        "lower": 0.0814463298720915,
+        "upper": 0.3121323423880612
+      },
+      "ece_fixed_width": 0.1860389177106187,
+      "ece_equal_mass": 0.18603891771061865,
+      "brier": 0.17872206415608105,
+      "num_test": 50
+    },
+    {
+      "signal": "num_distinct_answers",
+      "display_name": "Distinct answer strings",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.8741883116883117,
+        "lower": 0.7699730273752013,
+        "upper": 0.9605534242682581
+      },
+      "aurc": {
+        "value": 0.17813053065176118,
+        "lower": 0.08245041622346268,
+        "upper": 0.3233106135416257
+      },
+      "ece_fixed_width": 0.13664989325106688,
+      "ece_equal_mass": 0.1335269205462317,
+      "brier": 0.14893412966793929,
+      "num_test": 50
+    },
+    {
+      "signal": "seq_log_prob",
+      "display_name": "Sequence log-prob",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.827922077922078,
+        "lower": 0.684489179949538,
+        "upper": 0.9450128205128204
+      },
+      "aurc": {
+        "value": 0.2398750464768381,
+        "lower": 0.10258414384207777,
+        "upper": 0.4124601200503623
+      },
+      "ece_fixed_width": 0.10775964909407716,
+      "ece_equal_mass": 0.1037377438498051,
+      "brier": 0.1577387326465728,
+      "num_test": 50
+    },
+    {
+      "signal": "seq_prob",
+      "display_name": "Sequence probability",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.827922077922078,
+        "lower": 0.684489179949538,
+        "upper": 0.9450128205128204
+      },
+      "aurc": {
+        "value": 0.2398750464768381,
+        "lower": 0.10258414384207777,
+        "upper": 0.4124601200503623
+      },
+      "ece_fixed_width": 0.03999132704362385,
+      "ece_equal_mass": 0.03999132704362385,
+      "brier": 0.24799930623871005,
+      "num_test": 50
+    },
+    {
+      "signal": "weighted_semantic_entropy",
+      "display_name": "Semantic entropy (likelihood-weighted)",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.8060064935064936,
+        "lower": 0.674358576388889,
+        "upper": 0.9259259259259259
+      },
+      "aurc": {
+        "value": 0.2811559230100203,
+        "lower": 0.11493213963136262,
+        "upper": 0.4335299850158939
+      },
+      "ece_fixed_width": 0.14366888476374,
+      "ece_equal_mass": 0.1808833484403657,
+      "brier": 0.18309279857482907,
+      "num_test": 50
+    },
+    {
+      "signal": "semantic_self_consistency",
+      "display_name": "Semantic self-consistency",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.799512987012987,
+        "lower": 0.660777564935065,
+        "upper": 0.9179012259292432
+      },
+      "aurc": {
+        "value": 0.28061774771743503,
+        "lower": 0.11329333235267511,
+        "upper": 0.4400644273456166
+      },
+      "ece_fixed_width": 0.13012418814123547,
+      "ece_equal_mass": 0.14933095108477026,
+      "brier": 0.20116082081490258,
+      "num_test": 50
+    },
+    {
+      "signal": "semantic_entropy",
+      "display_name": "Semantic entropy",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.7938311688311688,
+        "lower": 0.6591403612479475,
+        "upper": 0.9107392978413776
+      },
+      "aurc": {
+        "value": 0.2865990233301824,
+        "lower": 0.11811253128374827,
+        "upper": 0.44078122539689424
+      },
+      "ece_fixed_width": 0.14681977592532366,
+      "ece_equal_mass": 0.18130246011244125,
+      "brier": 0.18792361693352216,
+      "num_test": 50
+    },
+    {
+      "signal": "num_semantic_clusters",
+      "display_name": "Distinct meanings",
+      "granularity": "sentence",
+      "cost_tier": "multi_sample",
+      "auroc": {
+        "value": 0.7784090909090909,
+        "lower": 0.6379046587817203,
+        "upper": 0.9006773399014778
+      },
+      "aurc": {
+        "value": 0.2913465435262669,
+        "lower": 0.11990479700349456,
+        "upper": 0.44021600365639085
+      },
+      "ece_fixed_width": 0.14329440787992964,
+      "ece_equal_mass": 0.13952639074666973,
+      "brier": 0.18976706930411497,
+      "num_test": 50
+    },
+    {
+      "signal": "log_perplexity",
+      "display_name": "Log-perplexity",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.7451298701298701,
+        "lower": 0.5920052083333333,
+        "upper": 0.8842001491810646
+      },
+      "aurc": {
+        "value": 0.29878444753093875,
+        "lower": 0.1381930512319032,
+        "upper": 0.48609293269441045
+      },
+      "ece_fixed_width": 0.160497621091518,
+      "ece_equal_mass": 0.1984365507090593,
+      "brier": 0.24404052345499305,
+      "num_test": 50
+    },
+    {
+      "signal": "mean_entropy",
+      "display_name": "Mean token entropy",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.7353896103896104,
+        "lower": 0.5669764250114144,
+        "upper": 0.889525974025974
+      },
+      "aurc": {
+        "value": 0.33794580482402153,
+        "lower": 0.14501940276589811,
+        "upper": 0.5197836200682
+      },
+      "ece_fixed_width": 0.17746899730221866,
+      "ece_equal_mass": 0.19453477020951948,
+      "brier": 0.24077935076840012,
+      "num_test": 50
+    },
+    {
+      "signal": "min_max_prob",
+      "display_name": "Min max-softmax",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.7321428571428571,
+        "lower": 0.5656929347826087,
+        "upper": 0.8658104620243684
+      },
+      "aurc": {
+        "value": 0.2880351583567635,
+        "lower": 0.137936158564879,
+        "upper": 0.49617994008044286
+      },
+      "ece_fixed_width": 0.15235428483382846,
+      "ece_equal_mass": 0.19583124943401156,
+      "brier": 0.24416200807112287,
+      "num_test": 50
+    },
+    {
+      "signal": "mean_max_prob",
+      "display_name": "Mean max-softmax",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.7159090909090909,
+        "lower": 0.5381610576923077,
+        "upper": 0.8679707822370866
+      },
+      "aurc": {
+        "value": 0.345247528958091,
+        "lower": 0.15200069860401502,
+        "upper": 0.5323784337973706
+      },
+      "ece_fixed_width": 0.20656569561534138,
+      "ece_equal_mass": 0.27951479975429117,
+      "brier": 0.24732780676642807,
+      "num_test": 50
+    },
+    {
+      "signal": "mean_margin",
+      "display_name": "Mean top1-top2 margin",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.7126623376623377,
+        "lower": 0.532051282051282,
+        "upper": 0.8650416666666666
+      },
+      "aurc": {
+        "value": 0.34703445363525964,
+        "lower": 0.15611389726304423,
+        "upper": 0.532668557076199
+      },
+      "ece_fixed_width": 0.17291511139459023,
+      "ece_equal_mass": 0.23905270220985375,
+      "brier": 0.24662223738271166,
+      "num_test": 50
+    },
+    {
+      "signal": "max_entropy",
+      "display_name": "Max token entropy",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.6801948051948052,
+        "lower": 0.5025434085447372,
+        "upper": 0.8288699305555555
+      },
+      "aurc": {
+        "value": 0.32605861628321614,
+        "lower": 0.16365222987847966,
+        "upper": 0.514954308216381
+      },
+      "ece_fixed_width": 0.07559801309194422,
+      "ece_equal_mass": 0.15008892003207494,
+      "brier": 0.2148891050654141,
+      "num_test": 50
+    },
+    {
+      "signal": "min_margin",
+      "display_name": "Min top1-top2 margin",
+      "granularity": "token",
+      "cost_tier": "single_pass",
+      "auroc": {
+        "value": 0.5462662337662337,
+        "lower": 0.37096271059743546,
+        "upper": 0.7003246753246752
+      },
+      "aurc": {
+        "value": 0.44967395131552207,
+        "lower": 0.2605202996648767,
+        "upper": 0.6431851920181486
+      },
+      "ece_fixed_width": 0.039936421029743374,
+      "ece_equal_mass": 0.2399954863899065,
+      "brier": 0.2479946953562244,
+      "num_test": 50
+    },
+    {
+      "signal": "verbalized_confidence",
+      "display_name": "Verbalized confidence",
+      "granularity": "sentence",
+      "cost_tier": "extra_call",
+      "auroc": {
+        "value": 0.44155844155844154,
+        "lower": 0.33158651244588744,
+        "upper": 0.5547631041876566
+      },
+      "aurc": {
+        "value": 0.47900357997683557,
+        "lower": 0.3212422895295773,
+        "upper": 0.7020794984627318
+      },
+      "ece_fixed_width": 0.040000237823270446,
+      "ece_equal_mass": 0.040000237823270404,
+      "brier": 0.2479625263730193,
+      "num_test": 50
+    }
+  ],
+  "selective": [
+    {
+      "target_accuracy": 0.6,
+      "threshold": 2.3025850929940455,
+      "dev_coverage": 1.0,
+      "dev_accuracy": 0.6,
+      "test_coverage": 1.0,
+      "test_accuracy": 0.56,
+      "test_num_answered": 50,
+      "target_met_on_test": false
+    },
+    {
+      "target_accuracy": 0.7,
+      "threshold": 1.8343719702816237,
+      "dev_coverage": 0.8,
+      "dev_accuracy": 0.7,
+      "test_coverage": 0.74,
+      "test_accuracy": 0.7297297297297297,
+      "test_num_answered": 37,
+      "target_met_on_test": true
+    },
+    {
+      "target_accuracy": 0.8,
+      "threshold": 1.7480673485460891,
+      "dev_coverage": 0.7,
+      "dev_accuracy": 0.7428571428571429,
+      "test_coverage": 0.7,
+      "test_accuracy": 0.7714285714285715,
+      "test_num_answered": 35,
+      "target_met_on_test": false
+    },
+    {
+      "target_accuracy": 0.9,
+      "threshold": 1.2275294114572126,
+      "dev_coverage": 0.52,
+      "dev_accuracy": 0.8461538461538461,
+      "test_coverage": 0.44,
+      "test_accuracy": 0.8636363636363636,
+      "test_num_answered": 22,
+      "target_met_on_test": false
+    }
+  ],
+  "tiers": [
+    {
+      "tier": "High",
+      "count": 19,
+      "share": 0.38,
+      "accuracy": 0.8421052631578947
+    },
+    {
+      "tier": "Medium",
+      "count": 16,
+      "share": 0.32,
+      "accuracy": 0.6875
+    },
+    {
+      "tier": "Low",
+      "count": 15,
+      "share": 0.3,
+      "accuracy": 0.06666666666666667
+    }
+  ],
+  "tier_gap": 0.775438596491228,
+  "cascade": {
+    "greedy_accuracy": 0.56,
+    "self_consistency_accuracy": 0.66,
+    "curve": [
+      {
+        "escalation_budget": 0.0,
+        "threshold": Infinity,
+        "test_escalation_rate": 0.0,
+        "test_accuracy": 0.56,
+        "mean_generations": 1.0,
+        "generation_cost_ratio": 0.09090909090909091
+      },
+      {
+        "escalation_budget": 0.1,
+        "threshold": 2.163955656882057,
+        "test_escalation_rate": 0.02,
+        "test_accuracy": 0.56,
+        "mean_generations": 1.2,
+        "generation_cost_ratio": 0.10909090909090909
+      },
+      {
+        "escalation_budget": 0.2,
+        "threshold": 1.862097857504022,
+        "test_escalation_rate": 0.26,
+        "test_accuracy": 0.62,
+        "mean_generations": 3.6,
+        "generation_cost_ratio": 0.32727272727272727
+      },
+      {
+        "escalation_budget": 0.3,
+        "threshold": 1.7480673485460891,
+        "test_escalation_rate": 0.3,
+        "test_accuracy": 0.62,
+        "mean_generations": 4.0,
+        "generation_cost_ratio": 0.36363636363636365
+      },
+      {
+        "escalation_budget": 0.4,
+        "threshold": 1.5979466214846325,
+        "test_escalation_rate": 0.38,
+        "test_accuracy": 0.62,
+        "mean_generations": 4.8,
+        "generation_cost_ratio": 0.43636363636363634
+      },
+      {
+        "escalation_budget": 0.5,
+        "threshold": 1.2275294114572126,
+        "test_escalation_rate": 0.56,
+        "test_accuracy": 0.62,
+        "mean_generations": 6.6000000000000005,
+        "generation_cost_ratio": 0.6000000000000001
+      },
+      {
+        "escalation_budget": 0.6,
+        "threshold": 1.136529460244027,
+        "test_escalation_rate": 0.6,
+        "test_accuracy": 0.62,
+        "mean_generations": 7.0,
+        "generation_cost_ratio": 0.6363636363636364
+      },
+      {
+        "escalation_budget": 0.8,
+        "threshold": 0.639031859650177,
+        "test_escalation_rate": 0.68,
+        "test_accuracy": 0.64,
+        "mean_generations": 7.800000000000001,
+        "generation_cost_ratio": 0.7090909090909091
+      },
+      {
+        "escalation_budget": 1.0,
+        "threshold": -Infinity,
+        "test_escalation_rate": 1.0,
+        "test_accuracy": 0.66,
+        "mean_generations": 11.0,
+        "generation_cost_ratio": 1.0
+      }
+    ],
+    "selected": {
+      "escalation_budget": 0.8,
+      "threshold": 0.639031859650177,
+      "test_escalation_rate": 0.68,
+      "test_accuracy": 0.64,
+      "mean_generations": 7.800000000000001,
+      "generation_cost_ratio": 0.7090909090909091
+    },
+    "num_samples": 10,
+    "num_test": 50
+  },
+  "cost_seconds": {
+    "single_pass": 9.223740685729863,
+    "extra_call": 0.17455223079043208,
+    "multi_sample": 12.288204065379977
+  }
+}
