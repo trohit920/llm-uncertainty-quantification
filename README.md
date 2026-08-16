@@ -15,15 +15,33 @@ python -m venv .venv
 source .venv/bin/activate            # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 
-python scripts/run_experiment.py --quick    # ~10 min sanity run, 15 examples/task
-python scripts/run_experiment.py            # full run: 200 NQ-Open + 100 GSM8K
-python scripts/make_figures.py              # all figures + metrics JSON
+python scripts/run_all.py            # everything, end to end (~40 min)
+```
+
+That single command chains all five stages in dependency order and stops at the
+first failure:
+
+    generate -> figures + metrics -> report -> study guide -> notebook
+
+Variants:
+
+```bash
+python scripts/run_all.py --quick             # 15 examples/task, ~6 min (sanity check)
+python scripts/run_all.py --skip-generation   # rebuild artifacts from saved records, ~1 min
+./verify_submission.sh                        # 25-point check: env, tests, artifacts, hygiene
+```
+
+Individual stages, if you want to run them piecemeal:
+
+```bash
+python scripts/run_experiment.py            # generation only -> results/records_*.jsonl
+python scripts/make_figures.py              # figures + metrics JSON
 python scripts/fill_report.py               # writes report.md from the metrics
+python scripts/make_study_guide.py          # printable study_guide.pdf
+python scripts/build_notebook.py            # builds and executes the notebook
 python scripts/demo_applications.py         # selective answering + confidence tags
 python scripts/demo_self_consistency.py     # cascade vs greedy vs always-sample
-python scripts/build_notebook.py            # builds and executes the notebook
-python scripts/make_study_guide.py          # printable study_guide.pdf
-pytest                                      # 198 unit tests
+pytest                                      # 198 unit tests, no GPU or network needed
 ```
 
 The first run downloads ~3.5 GB of model weights to your Hugging Face cache.
