@@ -165,6 +165,13 @@ the dev/test split, sampling, and the bootstrap. Per-example sampling seeds are
 offset deterministically from the base seed so samples differ across examples
 while the run as a whole is reproducible.
 
+Seeding fixes the sampling *procedure*, not the floating-point arithmetic
+underneath it. GPU kernel selection varies with machine state, so a borderline
+token can resolve differently between runs on different hardware or library
+builds, which shifts a metric in the third decimal place. Analysis and
+evaluation are fully deterministic given a fixed `results/` directory;
+generation is reproducible in distribution rather than bit-for-bit.
+
 `report.md`, the notebook and `study_guide.pdf` are all **generated** from
 `results/metrics_{task}.json`, so no number in the write-up can drift from the
 data it came from. The report's narrative claims are derived too — which signal
