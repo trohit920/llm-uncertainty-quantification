@@ -89,8 +89,11 @@ Greedy accuracy on the held-out split: **0.140**
 | Semantic self-consistency | sentence | `multi_sample` | 0.882 [0.801, 0.948] | 0.707 | 0.090 | 0.124 |
 | Mean max-softmax | token | `single_pass` | 0.865 [0.779, 0.938] | 0.705 | 0.089 | 0.136 |
 
-**Best signal: Sequence log-prob** — AUROC 0.945
+**Highest held-out AUROC: Sequence log-prob** — AUROC 0.945
 [0.899, 0.981], AURC 0.650.
+This ranking is reported, never used to choose: the signal behind selective
+answering and confidence tags below is **Self-consistency**,
+chosen by its dev-split AUROC.
 
 The best **free** signal is Sequence log-prob at 0.945, a gap of +0.000 against the best signal overall. The bootstrap intervals overlap, so this gap is not resolved at this sample size.
 
@@ -99,22 +102,22 @@ The best **free** signal is Sequence log-prob at 0.945, a gap of +0.000 against 
 
 | Target | Coverage | Accuracy achieved | Target met on test? |
 |---|---|---|---|
-| 25% | 10% | 0.600 | yes |
-| 40% | 7% | 0.714 | yes |
-| 50% | 0% | — | no |
-| 60% | 0% | — | no |
+| 25% | 16% | 0.625 | yes |
+| 40% | 9% | 0.556 | yes |
+| 50% | 9% | 0.556 | yes |
+| 60% | 9% | 0.556 | no |
 
-Dev-fitted thresholds held on unseen data for 2 of 4 targets — the honest measure of whether an operating point transfers, as opposed to whether it can be fitted.
+Dev-fitted thresholds held on unseen data for 3 of 4 targets — the honest measure of whether an operating point transfers, as opposed to whether it can be fitted.
 
 #### Confidence tags
 
 | Tier | Share | Accuracy |
 |---|---|---|
-| High | 27% | 0.519 |
-| Medium | 36% | 0.000 |
-| Low | 37% | 0.000 |
+| High | 35% | 0.371 |
+| Medium | 39% | 0.026 |
+| Low | 26% | 0.000 |
 
-High-minus-Low accuracy gap: **0.519**. The tags separate.
+High-minus-Low accuracy gap: **0.371**. The tags separate.
 
 
 ### gsm8k — grade-school math (chain of thought, single numeric answer)
@@ -139,8 +142,11 @@ Greedy accuracy on the held-out split: **0.560**
 | Mean max-softmax | token | `single_pass` | 0.716 [0.538, 0.868] | 0.345 | 0.207 | 0.280 |
 | Mean top1-top2 margin | token | `single_pass` | 0.713 [0.532, 0.865] | 0.347 | 0.173 | 0.239 |
 
-**Best signal: Lexical entropy** — AUROC 0.884
+**Highest held-out AUROC: Lexical entropy** — AUROC 0.884
 [0.780, 0.966], AURC 0.176.
+This ranking is reported, never used to choose: the signal behind selective
+answering and confidence tags below is **Distinct answer strings**,
+chosen by its dev-split AUROC.
 
 The best **free** signal is Sequence log-prob at 0.828, a gap of +0.056 against the best signal overall. The bootstrap intervals overlap, so this gap is not resolved at this sample size.
 
@@ -150,31 +156,35 @@ The best **free** signal is Sequence log-prob at 0.828, a gap of +0.056 against 
 | Target | Coverage | Accuracy achieved | Target met on test? |
 |---|---|---|---|
 | 60% | 100% | 0.560 | no |
-| 70% | 74% | 0.730 | yes |
-| 80% | 70% | 0.771 | no |
-| 90% | 44% | 0.864 | no |
+| 70% | 80% | 0.675 | no |
+| 80% | 72% | 0.750 | no |
+| 90% | 58% | 0.828 | no |
 
-Dev-fitted thresholds held on unseen data for 1 of 4 targets — the honest measure of whether an operating point transfers, as opposed to whether it can be fitted.
+Dev-fitted thresholds held on unseen data for 0 of 4 targets — the honest measure of whether an operating point transfers, as opposed to whether it can be fitted.
 
 #### Confidence tags
 
 | Tier | Share | Accuracy |
 |---|---|---|
-| High | 38% | 0.842 |
-| Medium | 32% | 0.688 |
-| Low | 30% | 0.067 |
+| High | 42% | 0.857 |
+| Medium | 38% | 0.474 |
+| Low | 20% | 0.100 |
 
-High-minus-Low accuracy gap: **0.775**. The tags separate.
+High-minus-Low accuracy gap: **0.757**. The tags separate.
 
 #### Self-consistency and the uncertainty-gated cascade
+
+The gate is **Sequence log-prob**, the free single-pass
+signal with the highest dev-split AUROC. A gate must come from the free tier: one
+that needs the samples it is deciding whether to draw saves nothing.
 
 | Policy | Accuracy | Generations / question |
 |---|---|---|
 | Greedy only | 0.560 | 1.00 |
 | Self-consistency (always) | 0.660 | 11.00 |
-| **Uncertainty-gated cascade** | **0.640** | **7.80** |
+| **Uncertainty-gated cascade** | **0.660** | **4.80** |
 
-Sampling buys +0.100 accuracy at 11× the generation cost. The cascade recovers +0.080 of that (80%) while escalating only 68% of questions, at 71% of the always-sample cost.
+Sampling buys +0.100 accuracy at 11× the generation cost. The cascade recovers +0.100 of that (100%) while escalating only 38% of questions, at 44% of the always-sample cost.
 
 
 ## Discussion

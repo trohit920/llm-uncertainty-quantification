@@ -204,8 +204,11 @@ Greedy accuracy on the held-out split: **{_fmt(analysis.greedy_accuracy)}**
 
 {results_table(analysis)}
 
-**Best signal: {best.display_name}** — AUROC {_fmt(best.auroc.value)}
+**Highest held-out AUROC: {best.display_name}** — AUROC {_fmt(best.auroc.value)}
 [{_fmt(best.auroc.lower)}, {_fmt(best.auroc.upper)}], AURC {_fmt(best.aurc.value)}.
+This ranking is reported, never used to choose: the signal behind selective
+answering and confidence tags below is **{get_spec(analysis.best_signal).display_name}**,
+chosen by its dev-split AUROC.
 
 {cheap_note}
 {_span_finding(analysis)}
@@ -258,6 +261,10 @@ def _cascade_section(analysis: TaskAnalysis) -> str:
 
     text = f"""
 #### Self-consistency and the uncertainty-gated cascade
+
+The gate is **{get_spec(analysis.gate_signal).display_name}**, the free single-pass
+signal with the highest dev-split AUROC. A gate must come from the free tier: one
+that needs the samples it is deciding whether to draw saves nothing.
 
 | Policy | Accuracy | Generations / question |
 |---|---|---|

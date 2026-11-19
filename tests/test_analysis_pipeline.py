@@ -19,8 +19,16 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from src.analysis import analyse_task, save_metrics, split_indices, top_signals
+from src.analysis import (
+    analyse_task,
+    save_metrics,
+    selection_candidates,
+    split_indices,
+    top_signals,
+)
 from src.config import RECORDS_FILENAME
+from src.evaluate import select_signal_on_dev
+from src.experiment import records_for_task, signal_columns
 from src.signals import SIGNAL_NAMES
 
 
@@ -134,6 +142,17 @@ class TestAnalyseTask:
         analysis = analyse_task("nq_open", results_dir)
         # semantic_entropy was planted as informative; mean_entropy as noise.
         assert analysis.best_signal in {"semantic_entropy", "self_consistency"}
+        dev, _ = split_indices(analysis.num_examples)
+        records = records_for_task("nq_open", results_dir)
+        columns = signal_columns(records)
+        dev_rows = {name: column[dev] for name, column in columns.items()}
+        dev_correct = [records[i]["greedy_correct"] for i in dev]
+        candidates = selection_candidates(
+            [ev.signal for ev in analysis.evaluations], dev_rows
+        )
+        assert analysis.best_signal == select_signal_on_dev(
+            dev_rows, dev_correct, candidates
+        )
 
         by_name = {ev.signal: ev for ev in analysis.evaluations}
         assert by_name["semantic_entropy"].auroc.value > 0.7
@@ -205,7 +224,14 @@ class TestAnalyseTask:
         analysis = analyse_task("nq_open", results_dir)
         leaders = top_signals(analysis, count=3)
         assert len(leaders) == 3
-        assert leaders[0] == analysis.best_signal
+        # top_signals reports the held-out ranking; best_signal is chosen on
+        # dev, so the two need not coincide (see test_signal_selection.py).
+        by_name = {ev.signal: ev.auroc.value for ev in analysis.evaluations}
+        aurocs = [by_name[name] for name in leaders]
+        assert aurocs == sorted(aurocs, reverse=True)
+        assert aurocs[0] == max(
+            value for value in by_name.values() if np.isfinite(value)
+        )
 
     def test_metrics_round_trip_to_json(
         self, results_dir: Path

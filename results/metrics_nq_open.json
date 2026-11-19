@@ -4,7 +4,8 @@
   "num_dev": 100,
   "num_test": 100,
   "greedy_accuracy": 0.14,
-  "best_signal": "seq_log_prob",
+  "best_signal": "self_consistency",
+  "gate_signal": "seq_log_prob",
   "evaluations": [
     {
       "signal": "seq_log_prob",
@@ -350,66 +351,66 @@
   "selective": [
     {
       "target_accuracy": 0.25,
-      "threshold": 0.446262660130742,
-      "dev_coverage": 0.08,
+      "threshold": -0.7,
+      "dev_coverage": 0.16,
       "dev_accuracy": 0.25,
-      "test_coverage": 0.1,
-      "test_accuracy": 0.6,
-      "test_num_answered": 10,
+      "test_coverage": 0.16,
+      "test_accuracy": 0.625,
+      "test_num_answered": 16,
       "target_met_on_test": true
     },
     {
       "target_accuracy": 0.4,
-      "threshold": 0.2926850334470146,
-      "dev_coverage": 0.05,
-      "dev_accuracy": 0.4,
-      "test_coverage": 0.07,
-      "test_accuracy": 0.7142857142857143,
-      "test_num_answered": 7,
+      "threshold": -0.9,
+      "dev_coverage": 0.09,
+      "dev_accuracy": 0.3333333333333333,
+      "test_coverage": 0.09,
+      "test_accuracy": 0.5555555555555556,
+      "test_num_answered": 9,
       "target_met_on_test": true
     },
     {
       "target_accuracy": 0.5,
-      "threshold": -Infinity,
-      "dev_coverage": 0.0,
-      "dev_accuracy": NaN,
-      "test_coverage": 0.0,
-      "test_accuracy": NaN,
-      "test_num_answered": 0,
-      "target_met_on_test": false
+      "threshold": -0.9,
+      "dev_coverage": 0.09,
+      "dev_accuracy": 0.3333333333333333,
+      "test_coverage": 0.09,
+      "test_accuracy": 0.5555555555555556,
+      "test_num_answered": 9,
+      "target_met_on_test": true
     },
     {
       "target_accuracy": 0.6,
-      "threshold": -Infinity,
-      "dev_coverage": 0.0,
-      "dev_accuracy": NaN,
-      "test_coverage": 0.0,
-      "test_accuracy": NaN,
-      "test_num_answered": 0,
+      "threshold": -0.9,
+      "dev_coverage": 0.09,
+      "dev_accuracy": 0.3333333333333333,
+      "test_coverage": 0.09,
+      "test_accuracy": 0.5555555555555556,
+      "test_num_answered": 9,
       "target_met_on_test": false
     }
   ],
   "tiers": [
     {
       "tier": "High",
-      "count": 27,
-      "share": 0.27,
-      "accuracy": 0.5185185185185185
+      "count": 35,
+      "share": 0.35,
+      "accuracy": 0.37142857142857144
     },
     {
       "tier": "Medium",
-      "count": 36,
-      "share": 0.36,
-      "accuracy": 0.0
+      "count": 39,
+      "share": 0.39,
+      "accuracy": 0.02564102564102564
     },
     {
       "tier": "Low",
-      "count": 37,
-      "share": 0.37,
+      "count": 26,
+      "share": 0.26,
       "accuracy": 0.0
     }
   ],
-  "tier_gap": 0.5185185185185185,
+  "tier_gap": 0.37142857142857144,
   "cascade": null,
   "cost_seconds": {
     "single_pass": 0.19468183488985233,

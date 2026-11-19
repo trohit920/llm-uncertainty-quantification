@@ -180,7 +180,7 @@ def main() -> int:
     print(f"\n{'=' * 64}")
     print(
         f"Self-consistency decoding  |  {_CASCADE_TASK}  |  "
-        f"gate: {get_spec(analysis.best_signal).display_name}"
+        f"gate: {get_spec(analysis.gate_signal).display_name}"
     )
     print(f"{'=' * 64}\n")
 

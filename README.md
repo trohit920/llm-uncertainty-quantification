@@ -41,7 +41,7 @@ python scripts/make_study_guide.py          # printable study_guide.pdf
 python scripts/build_notebook.py            # builds and executes the notebook
 python scripts/demo_applications.py         # selective answering + confidence tags
 python scripts/demo_self_consistency.py     # cascade vs greedy vs always-sample
-pytest                                      # 198 unit tests, no GPU or network needed
+pytest                                      # 208 unit tests, no GPU or network needed
 ```
 
 The first run downloads ~3.5 GB of model weights to your Hugging Face cache.
@@ -110,6 +110,10 @@ scores.
 fitted on the dev split and reported on the held-out test split. Since a raw
 entropy is not a probability, ECE requires mapping the signal to P(correct);
 fitting that mapping on the split you report would flatter every method.
+The same rule covers *which* signal drives each application: the signal
+behind selective answering and confidence tags, and the cascade's gate, are
+chosen by dev-split AUROC. The test-split ranking is reported, never used to
+choose.
 
 ### Applications
 
@@ -119,8 +123,8 @@ fitting that mapping on the split you report would flatter every method.
    High-minus-Low accuracy gap as the test of whether the tags mean anything.
 3. **Self-consistency decoding** — majority vote over samples for math, plus an
    **uncertainty-gated cascade** that escalates to sampling only when the
-   greedy pass looks unreliable, recovering most of the accuracy gain at a
-   fraction of the compute.
+   greedy pass looks unreliable. The gate is a free single-pass signal: a gate
+   that needed the samples it decides whether to draw would save nothing.
 
 ---
 
@@ -146,7 +150,7 @@ track_2/
 │   ├── analysis.py            # composes the above into a per-task bundle
 │   └── plots.py               # all figures
 ├── scripts/                   # entry points (see Quick start)
-├── tests/                     # 198 unit tests, no GPU required
+├── tests/                     # 208 unit tests, no GPU required
 ├── results/                   # records_{task}.jsonl, metrics_{task}.json
 ├── figures/                   # generated PNGs
 ├── notebooks/                 # generated, executed notebook
@@ -181,7 +185,7 @@ computed, not asserted.
 ## Testing
 
 ```bash
-pytest              # 198 tests, ~30 s, no GPU or network needed
+pytest              # 208 tests, ~30 s, no GPU or network needed
 pytest -v           # per-test detail
 ```
 

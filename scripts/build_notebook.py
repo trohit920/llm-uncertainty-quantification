@@ -220,7 +220,8 @@ def build_cells() -> list:
         ),
         new_code_cell(
             "for task, analysis in analyses.items():\n"
-            "    print(f'=== {task} | gating on {get_spec(analysis.best_signal).display_name} ===')\n"
+            "    print(f'=== {task} | selective/tiers: {get_spec(analysis.best_signal).display_name}'\n"
+            "          f' | cascade gate: {get_spec(analysis.gate_signal).display_name if analysis.gate_signal else \"none\"} (both chosen on dev) ===')\n"
             "    display(pd.DataFrame([p.as_dict() for p in analysis.selective])[\n"
             "        ['target_accuracy', 'test_coverage', 'test_accuracy', 'target_met_on_test']\n"
             "    ])\n"

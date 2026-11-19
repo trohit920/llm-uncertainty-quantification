@@ -39,14 +39,21 @@ from .evaluate import (
     build_reliability_diagram,
     build_risk_coverage_curve,
     evaluate_all_signals,
+    select_signal_on_dev,
 )
 from .experiment import records_for_task, signal_columns
 from .self_consistency import CascadeReport, build_cascade_report
+from .signals import SIGNAL_NAMES, available_signals, get_spec
 
 logger = logging.getLogger(__name__)
 
 #: Number of top-ranked signals carried into the detailed figures.
 TOP_SIGNALS_FOR_FIGURES: Final[int] = 3
+
+#: Cost tier whose signals come free with the greedy decode. The cascade gate
+#: must come from this tier: a gate that needs the samples it is deciding
+#: whether to draw saves nothing.
+FREE_COST_TIER: Final[str] = "single_pass"
 
 #: Cost tiers, mapped to the timing field that measures them.
 _TIER_TIMING_FIELDS: Final[dict[str, tuple[str, ...]]] = {
@@ -66,8 +73,12 @@ class TaskAnalysis:
         num_dev: Size of the threshold-fitting split.
         num_test: Size of the held-out split.
         greedy_accuracy: Greedy-decode accuracy on the held-out split.
-        evaluations: Per-signal metrics, ranked by AUROC.
-        best_signal: Name of the top-ranked signal.
+        evaluations: Per-signal metrics, ranked by held-out AUROC for reporting.
+        best_signal: Signal with the highest dev AUROC; drives selective
+            answering and confidence tags.
+        gate_signal: Free (single-pass) signal with the highest dev AUROC;
+            gates the cascade. ``None`` when no free signal is usable, in
+            which case no cascade is built.
         selective: Selective-answering operating points for the best signal.
         tiers: Confidence-tier reports for the best signal.
         tier_gap: Accuracy gap between the High and Low tiers.
@@ -82,6 +93,7 @@ class TaskAnalysis:
     greedy_accuracy: float
     evaluations: list[SignalEvaluation]
     best_signal: str
+    gate_signal: str | None
     selective: list[SelectiveOperatingPoint]
     tiers: list[ConfidenceTierReport]
     tier_gap: float
@@ -97,6 +109,7 @@ class TaskAnalysis:
             "num_test": self.num_test,
             "greedy_accuracy": self.greedy_accuracy,
             "best_signal": self.best_signal,
+            "gate_signal": self.gate_signal,
             "evaluations": [ev.as_dict() for ev in self.evaluations],
             "selective": [point.as_dict() for point in self.selective],
             "tiers": [tier.as_dict() for tier in self.tiers],
@@ -190,12 +203,18 @@ def analyse_task(
     if not evaluations:
         raise ValueError(f"No usable signals for task {task!r}")
 
-    best = evaluations[0].signal
+    # Choices that feed reported results are made on dev only; the test-AUROC
+    # ranking in ``evaluations`` is for reporting, never for selection.
+    candidates = selection_candidates([ev.signal for ev in evaluations], dev_rows)
+    best = select_signal_on_dev(dev_rows, dev_correct, candidates)
+    free = [name for name in candidates if get_spec(name).cost_tier == FREE_COST_TIER]
+    gate = select_signal_on_dev(dev_rows, dev_correct, free) if free else None
     logger.info(
-        "Best signal for %s: %s (AUROC %s)",
+        "Signals for %s chosen on dev: best=%s, cascade gate=%s; test-AUROC leader=%s",
         task,
-        evaluations[0].display_name,
-        evaluations[0].auroc,
+        best,
+        gate,
+        evaluations[0].signal,
     )
 
     selective = selective_answering(
@@ -210,7 +229,11 @@ def analyse_task(
         best, dev_rows[best], dev_correct, test_rows[best], test_correct
     )
 
-    cascade = _build_cascade(task, records, best, columns, dev_indices, test_indices)
+    cascade = (
+        _build_cascade(task, records, gate, columns, dev_indices, test_indices)
+        if gate is not None
+        else None
+    )
 
     return TaskAnalysis(
         task=task,
@@ -220,12 +243,40 @@ def analyse_task(
         greedy_accuracy=accuracy(test_correct),
         evaluations=evaluations,
         best_signal=best,
+        gate_signal=gate,
         selective=selective,
         tiers=tiers,
         tier_gap=tier_separation(tiers),
         cascade=cascade,
         cost_seconds=_mean_cost_by_tier(records),
     )
+
+
+def selection_candidates(
+    evaluated: Sequence[str], dev_rows: dict[str, np.ndarray]
+) -> list[str]:
+    """Signals eligible for selection, in fixed registry order.
+
+    Two properties keep test data out of the choice. The order is the signal
+    registry's, not the test-AUROC ranking, because selection breaks dev ties
+    by candidate order (and ties are real: ``seq_prob`` is ``exp`` of
+    ``seq_log_prob``). Usability is judged on dev columns, so a signal that is
+    degenerate on dev is never chosen because it varies on test.
+
+    Args:
+        evaluated: Names of signals that were evaluated for reporting.
+        dev_rows: Mapping from signal name to its dev-split column.
+
+    Returns:
+        Signal names in registry order.
+    """
+    evaluated_set = set(evaluated)
+    usable_on_dev = set(available_signals(dev_rows))
+    return [
+        name
+        for name in SIGNAL_NAMES
+        if name in evaluated_set and name in usable_on_dev
+    ]
 
 
 def _build_cascade(
@@ -319,8 +370,6 @@ def reliability_for_signals(
     correct = np.asarray([record["greedy_correct"] for record in records], dtype=bool)
     dev_indices, test_indices = split_indices(len(records), dev_fraction, seed)
 
-    from .signals import get_spec
-
     return {
         get_spec(name).display_name: build_reliability_diagram(
             name,
@@ -357,8 +406,6 @@ def risk_coverage_for_signals(
     columns = signal_columns(records)
     correct = np.asarray([record["greedy_correct"] for record in records], dtype=bool)
     _, test_indices = split_indices(len(records), dev_fraction, seed)
-
-    from .signals import get_spec
 
     curves = [
         build_risk_coverage_curve(

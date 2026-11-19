@@ -284,6 +284,46 @@ def evaluate_all_signals(
     )
 
 
+def select_signal_on_dev(
+    dev_rows: Mapping[str, Sequence[float]],
+    dev_correct: Sequence[bool],
+    candidates: Sequence[str],
+) -> str:
+    """Pick the candidate signal with the highest error-detection AUROC on dev.
+
+    Any decision that feeds a reported result (which signal gates selective
+    answering, confidence tags or the cascade) must be made without looking
+    at the held-out split. Ranking by test AUROC and then reporting test
+    results for the winner is selection on the test set, so the choice is made
+    here from dev data alone. Non-finite values are dropped per signal, and
+    ties are broken by candidate order so the result is deterministic.
+
+    Args:
+        dev_rows: Mapping from signal name to its dev-split column.
+        dev_correct: Dev-split correctness labels.
+        candidates: Signal names eligible for selection, in tie-break order.
+
+    Returns:
+        The name of the selected signal.
+
+    Raises:
+        ValueError: If no candidate has a defined dev AUROC.
+    """
+    labels = np.asarray(dev_correct, dtype=bool)
+    best_name: str | None = None
+    best_auroc = -np.inf
+    for name in candidates:
+        uncertainty = to_uncertainty(name, dev_rows[name])
+        mask = np.isfinite(uncertainty)
+        dev_auroc = error_detection_auroc(uncertainty[mask], labels[mask])
+        if np.isfinite(dev_auroc) and dev_auroc > best_auroc:
+            best_name, best_auroc = name, dev_auroc
+    if best_name is None:
+        raise ValueError(f"No candidate signal has a defined dev AUROC: {list(candidates)}")
+    logger.info("Selected %s on dev (dev AUROC %.3f)", best_name, best_auroc)
+    return best_name
+
+
 def build_reliability_diagram(
     signal: str,
     dev_values: Sequence[float],
